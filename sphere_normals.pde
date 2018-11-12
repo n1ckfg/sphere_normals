@@ -10,7 +10,7 @@ void setup(){
   size(800, 600, P3D);
   frameRate(60);
   smooth();
-  sphereDetail(80);
+  sphereDetail(100);
   fill(255);
   tex = loadImage("sky1.jpg");
   tex.loadPixels();
@@ -51,12 +51,11 @@ void draw_points(PShape shape) {
 }
 
 int xyToUv(PImage img, float _x, float _y) {
-  _y = abs(1.0 - _y);
   float theta = _x * 2.0 * PI;
   float phi = (_y - 0.5) * PI;
   float c = cos(phi);
   PVector v = new PVector(c * cos(theta), sin(phi), c * sin(theta));
-  int x = abs(int(v.z * img.width));
+  int x = abs(int(v.x * img.width));
   int y = abs(int(v.y * img.height));
   return (x + y * img.width) - 1;
 }
