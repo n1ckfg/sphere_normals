@@ -8,7 +8,7 @@ void setup(){
   size(800, 600, P3D);
   frameRate(60);
   smooth();
-  vertSphere = new VertSphere();
+  vertSphere = new VertSphere(10);
 }
  
 void draw(){

@@ -8,8 +8,17 @@ class VertSphere {
   int radius = 200;
   ArrayList<Vert> verts;
   color tintCol = color(255);
-  
+ 
   VertSphere() {
+    init(detail);
+  }
+  
+  VertSphere(int _detail) {
+    detail = _detail;
+    init(detail);
+  }
+  
+  void init(int _detail) {
     sphereDetail(detail);
     tex_rgb = loadImage("uv.jpg");
     tex_rgb.loadPixels();
