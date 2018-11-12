@@ -5,14 +5,15 @@
 PShape ps;
 float normLineLength = 20;
 PImage tex;
+int detail = 15;
 
 void setup(){
   size(800, 600, P3D);
   frameRate(60);
   smooth();
-  sphereDetail(100);
+  sphereDetail(detail);
   fill(255);
-  tex = loadImage("sky1.jpg");
+  tex = loadImage("uv.jpg");
   tex.loadPixels();
   ps = createShape(SPHERE, 200);
   ps.setTexture(tex);
@@ -25,7 +26,9 @@ void draw(){
   translate(width/2, height/2);
   rotateZ(millis() * 0.0001 * TWO_PI);
   rotateY(millis() * 0.0001 * TWO_PI);
+  
   stroke(0);
+  strokeWeight(4);
   shape(ps);
   stroke(255);
   strokeWeight(2);
@@ -40,7 +43,7 @@ void draw_points(PShape shape) {
     PVector v = shape.getVertex(i);
     PVector vn = v.copy().normalize();
     
-    stroke(tex.pixels[xyToUv(tex, v.x, v.y)]);
+    stroke(tex.pixels[xyToUv(tex, v.x, v.y, 360/detail, 360/detail)]);
     strokeWeight(8);
     point(v.x + vn.x, v.y + vn.y, v.z + vn.z);
     
@@ -50,12 +53,17 @@ void draw_points(PShape shape) {
   }
 }
 
-int xyToUv(PImage img, float _x, float _y) {
+int xyToUv(PImage img, float _x, float _y, float numLatitudeLines, float numLongitudeLines) {
+  float latitudeSpacing = 1.0f / (numLatitudeLines + 1.0f);
+  float longitudeSpacing = 1.0f / (numLongitudeLines);
+  _x = _x * longitudeSpacing;
+  _y = 1.0f - (_y + 1) * latitudeSpacing; 
+  
   float theta = _x * 2.0 * PI;
   float phi = (_y - 0.5) * PI;
   float c = cos(phi);
   PVector v = new PVector(c * cos(theta), sin(phi), c * sin(theta));
   int x = abs(int(v.x * img.width));
   int y = abs(int(v.y * img.height));
-  return (x + y * img.width) - 1;
+  return x + y * img.width;
 }
