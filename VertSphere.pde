@@ -20,7 +20,7 @@ class VertSphere {
   
   ArrayList<Vert> initVerts(PShape shape) {
     ArrayList<Vert> returns = new ArrayList<Vert>();
-      for (int i = 0 ; i < shape.getVertexCount(); i++) {
+      for (int i = 0 ; i < shape.getVertexCount(); i ++) {
         returns.add(new Vert(shape.getVertex(i)));
       }
     return returns;
@@ -40,7 +40,7 @@ class VertSphere {
     for (int i = 0 ; i < verts.size(); i++) {
       Vert v = verts.get(i);
       
-      stroke(tex_rgb.pixels[xyToUv(tex_rgb, v.co.x, v.co.y, 360/detail, 360/detail)]);
+      stroke(getPixelFromUv(tex_rgb, v.uv));
       strokeWeight(8);
       point(v.co.x + v.n.x, v.co.y + v.n.y, v.co.z + v.n.z);
       
@@ -50,19 +50,12 @@ class VertSphere {
     }
   }
 
-  int xyToUv(PImage img, float _x, float _y, float numLatitudeLines, float numLongitudeLines) {
-    float latitudeSpacing = 1.0f / (numLatitudeLines + 1.0f);
-    float longitudeSpacing = 1.0f / (numLongitudeLines);
-    _x = _x * longitudeSpacing;
-    _y = 1.0f - (_y + 1) * latitudeSpacing; 
-    
-    float theta = _x * 2.0 * PI;
-    float phi = (_y - 0.5) * PI;
-    float c = cos(phi);
-    PVector v = new PVector(c * cos(theta), sin(phi), c * sin(theta));
-    int x = abs(int(v.x * img.width));
-    int y = abs(int(v.y * img.height));
-    return x + y * img.width;
+  color getPixelFromUv(PImage img, PVector uv) {   
+    int x = abs(int(uv.x * img.width));
+    int y = abs(int(uv.y * img.height));
+    int loc = x + y * img.width;
+    loc = constrain(loc, 0, img.pixels.length - 1);
+    return img.pixels[loc];
   }
 
 }
