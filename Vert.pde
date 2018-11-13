@@ -86,4 +86,11 @@ class Vert {
     return new PVector(0.5 - u, v);
   }
   
+  PVector getXyz(float u, float v) {
+    float theta = u * 2.0 * PI;
+    float phi = (v - 0.5) * PI;
+    float c = cos(phi);
+    return new PVector(c * cos(theta), sin(phi), c * sin(theta));
+  }
+  
 }
