@@ -12,9 +12,9 @@ class VertSphere {
   boolean drawSourceSphere = false;
  
   float _Displacement = 620;
-  float _BaselineLength = 180;
+  float _BaselineLength = 1800;
   float _SphericalAngle = 3.142;
-  float _Maximum = 30003.65;
+  float _Maximum = 303.65;
   
   VertSphere() {
     init();
