@@ -20,7 +20,7 @@ class VertSphere {
   
   void init() {
     sphereDetail(detail);
-    tex_rgb = loadImage("uv.jpg");
+    tex_rgb = loadImage("sky1.jpg");
     tex_rgb.loadPixels();
     ps = createShape(SPHERE, radius);
     ps.setTexture(tex_rgb);  
