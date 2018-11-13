@@ -48,7 +48,7 @@ class VertSphere {
   }
 
   void draw_points() {
-    for (int i = 0 ; i < verts.size(); i++) {
+    for (int i = 0; i < verts.size(); i++) {
       Vert v = verts.get(i);
       
       stroke(v.col);

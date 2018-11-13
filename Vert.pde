@@ -9,21 +9,21 @@ class Vert {
     co = new PVector(0,0,0);
     col = color(0);
     n = co.copy().normalize();
-    uv = getUv(n);
+    uv = getUv(new PVector(co.z, 1.0 - co.y, co.x).normalize());
   }
   
   Vert(PVector _co) {
     co = _co;
     col = color(0);
     n = co.copy().normalize();
-    uv = getUv(n);
+    uv = getUv(new PVector(co.z, 1.0 - co.y, co.x).normalize());
   }
   
   Vert(PVector _co, color _col) {
     co = _co;
     col = _col;
     n = co.copy().normalize();
-    uv = getUv(n);
+    uv = getUv(new PVector(co.z, 1.0 - co.y, co.x).normalize());
   }
   
   Vert(PVector _co, PVector _uv) {
@@ -44,14 +44,14 @@ class Vert {
     co = new PVector(x, y, z);
     col = color(0);
     n = co.copy().normalize();
-    uv = getUv(n);
+    uv = getUv(new PVector(co.z, 1.0 - co.y, co.x).normalize());
   }
   
   Vert(float x, float y, float z, color _col) {
     co = new PVector(x, y, z);
     col = _col;
     n = co.copy().normalize();
-    uv = getUv(n);
+    uv = getUv(new PVector(co.z, 1.0 - co.y, co.x).normalize());
   }
   
   Vert(float x, float y, float z, float u, float v) {
@@ -71,7 +71,8 @@ class Vert {
   PVector getUv(PVector p) { // assumes normalized;
     float u = 0.5 + (atan2(p.x, p.z) / (2 * PI)); 
     float v = 0.5 - (asin(p.y) / PI);
-    return new PVector(u, v);
+
+    return new PVector(0.5 - u, v);
   }
   
 }
