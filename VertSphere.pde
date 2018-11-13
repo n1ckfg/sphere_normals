@@ -10,15 +10,15 @@ class VertSphere {
   color tintCol = color(255);
  
   VertSphere() {
-    init(detail);
+    init();
   }
   
   VertSphere(int _detail) {
     detail = _detail;
-    init(detail);
+    init();
   }
   
-  void init(int _detail) {
+  void init() {
     sphereDetail(detail);
     tex_rgb = loadImage("uv.jpg");
     tex_rgb.loadPixels();
@@ -30,7 +30,9 @@ class VertSphere {
   ArrayList<Vert> initVerts(PShape shape) {
     ArrayList<Vert> returns = new ArrayList<Vert>();
       for (int i = 0 ; i < shape.getVertexCount(); i ++) {
-        returns.add(new Vert(shape.getVertex(i)));
+        Vert v = new Vert(shape.getVertex(i));
+        v.col = getPixelFromUv(tex_rgb, v.uv);
+        returns.add(v);
       }
     return returns;
   }
@@ -49,7 +51,7 @@ class VertSphere {
     for (int i = 0 ; i < verts.size(); i++) {
       Vert v = verts.get(i);
       
-      stroke(getPixelFromUv(tex_rgb, v.uv));
+      stroke(v.col);
       strokeWeight(8);
       point(v.co.x + v.n.x, v.co.y + v.n.y, v.co.z + v.n.z);
       
@@ -60,8 +62,8 @@ class VertSphere {
   }
 
   color getPixelFromUv(PImage img, PVector uv) {   
-    int x = abs(int(uv.x * img.width));
-    int y = abs(int(uv.y * img.height));
+    int x = int(uv.x * img.width);
+    int y = int(uv.y * img.height);
     int loc = x + y * img.width;
     loc = constrain(loc, 0, img.pixels.length - 1);
     return img.pixels[loc];
