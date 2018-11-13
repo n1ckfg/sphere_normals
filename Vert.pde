@@ -4,10 +4,12 @@ class Vert {
   PVector uv;
   PVector n;
   color col;
+  color depth;
   
   Vert() {
     co = new PVector(0,0,0);
     col = color(0);
+    depth = color(0);
     n = co.copy().normalize();
     uv = getUv(co);
   }
@@ -15,6 +17,7 @@ class Vert {
   Vert(PVector _co) {
     co = _co;
     col = color(0);
+    depth = color(0);
     n = co.copy().normalize();
     uv = getUv(co);
   }
@@ -22,6 +25,7 @@ class Vert {
   Vert(PVector _co, color _col) {
     co = _co;
     col = _col;
+    depth = color(0);
     n = co.copy().normalize();
     uv = getUv(co);
   }
@@ -29,6 +33,7 @@ class Vert {
   Vert(PVector _co, PVector _uv) {
     co = _co;
     col = color(0);
+    depth = color(0);
     n = co.copy().normalize();
     uv = _uv;
   }
@@ -36,6 +41,7 @@ class Vert {
   Vert(PVector _co, PVector _uv, color _col) {
     co = _co;
     col = _col;
+    depth = color(0);
     n = co.copy().normalize();
     uv = _uv;
   }
@@ -43,6 +49,7 @@ class Vert {
   Vert(float x, float y, float z) {
     co = new PVector(x, y, z);
     col = color(0);
+    depth = color(0);
     n = co.copy().normalize();
     uv = getUv(co);
   }
@@ -50,6 +57,7 @@ class Vert {
   Vert(float x, float y, float z, color _col) {
     co = new PVector(x, y, z);
     col = _col;
+    depth = color(0);
     n = co.copy().normalize();
     uv = getUv(co);
   }
@@ -57,6 +65,7 @@ class Vert {
   Vert(float x, float y, float z, float u, float v) {
     co = new PVector(x, y, z);
     col = color(0);
+    depth = color(0);
     n = co.copy().normalize();
     uv = new PVector(u, v);
   }
@@ -64,6 +73,7 @@ class Vert {
   Vert(float x, float y, float z, float u, float v, color _col) {
     co = new PVector(x, y, z);
     col = _col;
+    depth = color(0);
     n = co.copy().normalize();
     uv = new PVector(u, v);
   }

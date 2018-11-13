@@ -20,8 +20,10 @@ class VertSphere {
   
   void init() {
     sphereDetail(detail);
-    tex_rgb = loadImage("sky1.jpg");
+    tex_rgb = loadImage("eqr-rgb-small.jpg");
+    tex_depth = loadImage("eqr-depth-small.jpg");
     tex_rgb.loadPixels();
+    tex_depth.loadPixels();
     ps = createShape(SPHERE, radius);
     ps.setTexture(tex_rgb);  
     verts = initVerts(ps);
@@ -29,19 +31,21 @@ class VertSphere {
   
   ArrayList<Vert> initVerts(PShape shape) {
     ArrayList<Vert> returns = new ArrayList<Vert>();
-      for (int i = 0 ; i < shape.getVertexCount(); i ++) {
-        Vert v = new Vert(shape.getVertex(i));
-        v.col = getPixelFromUv(tex_rgb, v.uv);
-        returns.add(v);
-      }
+    for (int i = 0 ; i < shape.getVertexCount(); i ++) {
+      Vert v = new Vert(shape.getVertex(i));
+      v.col = getPixelFromUv(tex_rgb, v.uv);
+      v.depth = getPixelFromUv(tex_depth, v.uv);
+      v.co = reprojectEqr(v);
+      returns.add(v);
+    }
     return returns;
   }
   
   void draw() {
-    fill(tintCol);
-    stroke(0);
-    strokeWeight(4);
-    shape(ps);
+    //fill(tintCol);
+    //stroke(0);
+    //strokeWeight(4);
+    //shape(ps);
     stroke(255);
     strokeWeight(2);
     draw_points();
@@ -67,6 +71,20 @@ class VertSphere {
     int loc = x + y * img.width;
     loc = constrain(loc, 0, img.pixels.length - 1);
     return img.pixels[loc];
+  }
+
+  float _Displacement = 620;
+  float _BaselineLength = 1800;
+  float _SphericalAngle = 3.142;
+  float _Maximum = 3003.65;
+  
+  float getDepthSpherical(float d) {
+      return asin(_BaselineLength * sin(_SphericalAngle)) / asin(d);
+  }
+          
+  PVector reprojectEqr(Vert v) {
+    PVector returns = v.n.copy().mult(constrain(getDepthSpherical(red(v.depth)/255.0), -_Maximum, 0) * _Displacement);
+    return new PVector(returns.x, -returns.y, returns.z);
   }
 
 }
