@@ -8,7 +8,14 @@ class VertSphere {
   int radius = 200;
   ArrayList<Vert> verts;
   color tintCol = color(255);
+  boolean drawEndLines = false;
+  boolean drawSourceSphere = false;
  
+  float _Displacement = 620;
+  float _BaselineLength = 180;
+  float _SphericalAngle = 3.142;
+  float _Maximum = 30003.65;
+  
   VertSphere() {
     init();
   }
@@ -42,10 +49,12 @@ class VertSphere {
   }
   
   void draw() {
-    //fill(tintCol);
-    //stroke(0);
-    //strokeWeight(4);
-    //shape(ps);
+    if (drawSourceSphere) {
+      fill(tintCol);
+      stroke(0);
+      strokeWeight(4);
+      shape(ps);
+    }
     stroke(255);
     strokeWeight(2);
     draw_points();
@@ -56,12 +65,14 @@ class VertSphere {
       Vert v = verts.get(i);
       
       stroke(v.col);
-      strokeWeight(8);
+      strokeWeight(10);
       point(v.co.x + v.n.x, v.co.y + v.n.y, v.co.z + v.n.z);
       
-      PVector end = v.co.copy().add(v.n.copy().mult(normLineLength));
-      strokeWeight(2);
-      line(v.co.x, v.co.y, v.co.z, end.x, end.y, end.z);
+      if (drawEndLines) {
+        PVector end = v.co.copy().add(v.n.copy().mult(normLineLength));
+        strokeWeight(2);
+        line(v.co.x, v.co.y, v.co.z, end.x, end.y, end.z);
+      }
     }
   }
 
@@ -72,11 +83,6 @@ class VertSphere {
     loc = constrain(loc, 0, img.pixels.length - 1);
     return img.pixels[loc];
   }
-
-  float _Displacement = 620;
-  float _BaselineLength = 1800;
-  float _SphericalAngle = 3.142;
-  float _Maximum = 3003.65;
   
   float getDepthSpherical(float d) {
       return asin(_BaselineLength * sin(_SphericalAngle)) / asin(d);
