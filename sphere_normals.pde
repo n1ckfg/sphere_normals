@@ -10,7 +10,7 @@ VertSphere vertSphere;
 void setup(){
   size(800, 600, P3D);
   cam = new PeasyCam(this, 100);
-  vertSphere = new VertSphere(100);
+  vertSphere = new VertSphere(loadImage("eqr-rgb-small.jpg"), loadImage("eqr-depth-small.jpg"), 200);
   
   float fov = PI/3.0;
   float cameraZ = (height/2.0) / tan(fov/2.0);
