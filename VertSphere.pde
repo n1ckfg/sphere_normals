@@ -1,20 +1,16 @@
 class VertSphere {
   
-  PShape ps;
   PImage tex_rgb;
   PImage tex_depth;
   float normLineLength = 20;
-  int detail = 15;
-  int radius = 200;
+  int detail = 10;
   ArrayList<Vert> verts;
-  color tintCol = color(255);
   boolean drawEndLines = false;
-  boolean drawSourceSphere = false;
  
-  float _Displacement = 620;
-  float _BaselineLength = 1800;
+  float _Displacement = 500;
+  float _BaselineLength = 180;
   float _SphericalAngle = 3.142;
-  float _Maximum = 303.65;
+  float _Maximum = 1000;
   
   VertSphere(PImage _rgb, PImage _depth) {
     init(_rgb, _depth);
@@ -26,35 +22,33 @@ class VertSphere {
   }
   
   void init(PImage _rgb, PImage _depth) {
-    sphereDetail(detail);
     tex_rgb = _rgb;
     tex_depth = _depth;
     tex_rgb.loadPixels();
     tex_depth.loadPixels();
-    ps = createShape(SPHERE, radius);
-    ps.setTexture(tex_rgb);  
-    verts = initVerts(ps);
+    verts = initVerts(detail);
   }
   
-  ArrayList<Vert> initVerts(PShape shape) {
+  ArrayList<Vert> initVerts(int detail) {
     ArrayList<Vert> returns = new ArrayList<Vert>();
-    for (int i = 0 ; i < shape.getVertexCount(); i ++) {
-      Vert v = new Vert(shape.getVertex(i));
-      v.col = getPixelFromUv(tex_rgb, v.uv);
-      v.depth = getPixelFromUv(tex_depth, v.uv);
-      v.co = reprojectEqr(v);
-      returns.add(v);
+    for (int m = 0; m < detail; m++) {
+      for (int n = 0; n < detail; n++) {
+        float x = sin(PI * m/detail) * cos(2 * PI * n/detail);
+        float z = sin(PI * m/detail) * sin(2 * PI * n/detail);
+        float y = cos(PI * m/detail); // up
+          
+        Vert v = new Vert(new PVector(x, y, z));
+        v.col = getPixelFromUv(tex_rgb, v.uv);
+        v.depth = getPixelFromUv(tex_depth, v.uv);
+        v.co = reprojectEqr(v);
+        returns.add(v);
+      }
     }
+
     return returns;
   }
   
   void draw() {
-    if (drawSourceSphere) {
-      fill(tintCol);
-      stroke(0);
-      strokeWeight(4);
-      shape(ps);
-    }
     stroke(255);
     strokeWeight(2);
     draw_points();
@@ -90,7 +84,7 @@ class VertSphere {
           
   PVector reprojectEqr(Vert v) {
     PVector returns = v.n.copy().mult(constrain(getDepthSpherical(red(v.depth)/255.0), -_Maximum, 0) * _Displacement);
-    return new PVector(returns.x, -returns.y, returns.z);
+    return new PVector(returns.x, returns.y, returns.z);
   }
 
 }
@@ -177,11 +171,17 @@ class Vert {
   }
   
   PVector getUv(PVector p) {
+    p = new PVector(p.x, p.y, p.z).normalize();
+    float u = 0.5 + (atan2(p.x, p.z) / (2 * PI)); 
+    float v = 0.5 - (asin(p.y) / PI);
+    return new PVector(1.0 - u, v);
+  }
+  
+  PVector getUvPShape(PVector p) {
     p = new PVector(p.z, 1.0 - p.y, p.x).normalize();
     float u = 0.5 + (atan2(p.x, p.z) / (2 * PI)); 
     float v = 0.5 - (asin(p.y) / PI);
-
-    return new PVector(0.5 - u, v);
+    return new PVector(0.5 + u, v);
   }
   
   PVector getXyz(float u, float v) {
